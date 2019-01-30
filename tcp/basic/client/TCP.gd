@@ -1,5 +1,4 @@
-#tcp.gd
-extends SceneTree
+extends Node
 
 var connection = null
 var peerstream = null
@@ -11,20 +10,18 @@ var values = [
 ]
 var test = null
 
-func _init():
+func _ready():
     print("Start client TCP")
     # Connect
     connection = StreamPeerTCP.new()
     connection.connect_to_host("127.0.0.1", 9090)
     peerstream = PacketPeerStream.new()
     peerstream.set_stream_peer(connection)
-    peerstream.put_var(null)
 
-    while(true):
-        if connection.is_connected_to_host() && connection.get_available_bytes() > 0 :
+func _process(delta):
+    if connection.is_connected_to_host():
+        if connection.get_available_bytes() > 0 :
             test = connection.get_var()
             print(test)
-            peerstream.put_var(values.pop_front())
-        if values.size() <= 0 :
-            break
-    quit()
+        if values.size() > 0 :
+           peerstream.put_var(values.pop_front())
