@@ -3,14 +3,14 @@ const { StreamTcp, GdBuffer, addLengthFront } = require('@gd-com/utils')
 
 let server = net.createServer((socket) => {
   const tcpSplit = new StreamTcp()
-  socket.pipe(tcpSplit).on('data', async (data) => {
+  socket.pipe(tcpSplit).on('data', (data) => {
     const packet = new GdBuffer(data)
 
-    const decoded = await packet.getVar()
+    const decoded = packet.getVar()
     console.log('receive :', decoded)
 
     const packetToSend = new GdBuffer()
-    await packetToSend.putVar(Math.random())
+    packetToSend.putVar(Math.random())
 
     let toSend = addLengthFront(packetToSend.getBuffer())
 

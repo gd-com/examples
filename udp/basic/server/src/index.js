@@ -8,13 +8,13 @@ server.on('listening', () => {
   console.log(`UDP Server listening on ${address.address}:${address.port}`)
 })
 
-server.on('message', async (buf, remote) => {
+server.on('message', (buf, remote) => {
   let buffer = new GdBuffer(Buffer.from(buf))
 
-  console.log('Recieve ' , await buffer.getVar())
+  console.log('Recieve ' , buffer.getVar())
 
   let send = new GdBuffer()
-  await send.putVar(Math.random())
+  send.putVar(Math.random())
 
   server.send(send.getBuffer(), remote.port, remote.host)
 })

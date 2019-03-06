@@ -12,7 +12,7 @@ server.on('listening', () => {
   console.log(`UDP Server listening on ${address.address}:${address.port}`)
 })
 
-server.on('message', async (buf, remote) => {
+server.on('message', (buf, remote) => {
   let client = null
   if (!clients.hasOwnProperty(`${remote.address}-${remote.port}`)) {
     clients[`${remote.address}-${remote.port}`] = {uuid: v4()}
@@ -23,7 +23,7 @@ server.on('message', async (buf, remote) => {
   }
 
   let recieve = new GdBuffer(Buffer.from(buf))
-  const type = await recieve.getU16()
+  const type = recieve.getU16()
 
   console.log(`[${client.uuid}] << Recieve packet code`, type)
   if (process.hasOwnProperty(type)) {

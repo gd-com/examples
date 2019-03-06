@@ -7,19 +7,18 @@ let server = net.createServer((socket) => {
   let uuid = v4()
 
   console.log(`[${uuid}] Connected`);
-  Promise.resolve().then(async () => {
-    // send is uuid
-    let uuidPacket = new GdBuffer()
-    await uuidPacket.putU16(1)
-    await uuidPacket.putString(uuid)
-    socket.write(addLengthFront(uuidPacket.getBuffer()))
-  })
+
+  // send is uuid
+  let uuidPacket = new GdBuffer()
+  uuidPacket.putU16(1)
+  uuidPacket.putString(uuid)
+  socket.write(addLengthFront(uuidPacket.getBuffer()))
 
   const tcpSplit = new StreamTcp()
-  socket.pipe(tcpSplit).on('data', async (data) => {
+  socket.pipe(tcpSplit).on('data', (data) => {
     let recieve = new GdBuffer(Buffer.from(data))
 
-    const type = await recieve.getU16()
+    const type = recieve.getU16()
     console.log(`[${uuid}] << Recieve packet code`, type)
     if (process.hasOwnProperty(type)) {
       process[`${type}`](uuid, socket, recieve.getBuffer())
