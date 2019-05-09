@@ -1,0 +1,29 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[  ]
+_global_script_class_icons={
+
+}
+
+[application]
+
+config/name="gd-com-websocket-tchat"
+run/main_scene="res://scenes/Login.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+network="*res://autoload/network.gd"
+storage="*res://autoload/storage.gd"
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
