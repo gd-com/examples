@@ -10,17 +10,15 @@ module.exports = {
 
       let packet = new GdBuffer()
       packet.putU16(packets.MESSAGE_SUCCESS)
-      packet.putString(message)
-      packet.putString(message)
+      packet.putString(new Date().toDateString())
       packet.putString(message)
       console.log(`[${uuid}] >> Send packet code`, packets.MESSAGE_SUCCESS)
-      console.log(packet.getBuffer())
       ws.send(packet.getBuffer())
 
       let packetToOther = new GdBuffer()
       packetToOther.putU16(packets.NEW_MESSAGE_REQUEST)
       packetToOther.putString(uuid)
-      packetToOther.putString(message)
+      packetToOther.putString(new Date().toDateString())
       packetToOther.putString(message)
       console.log(`[${uuid}] >> Send packet code`, packets.NEW_MESSAGE_REQUEST)
 

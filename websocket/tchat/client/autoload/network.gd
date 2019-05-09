@@ -51,8 +51,6 @@ func _process(delta):
 				STORAGE.reset()
 			3001:
 				emit_signal("message_accepted")
-				print('%s' % buffer.get_utf8_string())
-				print('%s' % buffer.get_utf8_string())
 				STORAGE.add_message({
 					"user": STORAGE.get_id(),
 					"time": buffer.get_utf8_string(),

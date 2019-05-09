@@ -22,6 +22,7 @@ wss.on('connection', ws => {
 
   ws.on('message', (message) => {
     let recieve = new GdBuffer(Buffer.from(message))
+    console.log(recieve.getBuffer())
 
     const type = recieve.getU16()
     console.log(`[${uuid}] << Recieve packet code`, type)

@@ -13,7 +13,10 @@ func _ready():
 		$MPannel/Scroll/MessagesList.add_child(test)
 
 func data_updated():
-	pass
+	for item in STORAGE.get_messages():
+		var test = Label.new()
+		test.text = item.message
+		$MPannel/Scroll/MessagesList.add_child(test)
 
 func message_accepted():
 	$MPannel/Message.text = ''
