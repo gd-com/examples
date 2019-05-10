@@ -14,9 +14,9 @@ func _ready():
 
 func data_updated():
 	for item in STORAGE.get_messages():
-		var test = Label.new()
-		test.text = item.message
-		$MPannel/Scroll/MessagesList.add_child(test)
+		var message = preload("res://scenes/Message.tscn").instance()
+		message.init(item.time, item.user, item.message)
+		$MPannel/Scroll/MessagesList.add_child(message)
 
 func message_accepted():
 	$MPannel/Message.text = ''
