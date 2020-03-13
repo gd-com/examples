@@ -1,5 +1,5 @@
 const net = require('net')
-const { putU16, putString } = require('@gd-com/utils')
+const { getU16, putU16, putString } = require('@gd-com/utils')
 const { v4 } = require('uuid')
 const process = require('./process')
 const StreamTcp = require('./StreamTcp')
@@ -25,9 +25,10 @@ let server = net.createServer((socket) => {
     let recieve = new Buffer.from(data)
 
     const type = getU16(recieve)
+
     console.log(`[${uuid}] << Recieve packet code`, type.value)
     if (process.hasOwnProperty(type.value)) {
-      process[`${type.value}`](uuid, socket, recieve.getBuffer())
+      process[`${type.value}`](uuid, socket, recieve.slice(type.length))
     } else {
       console.log(`[${uuid}] << Unknow packet code`, type.value)
     }

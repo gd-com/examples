@@ -16,6 +16,7 @@ func _process(delta):
 				if Input.is_action_just_released("ui_left"):
 						var buffer = StreamPeerBuffer.new()
 						buffer.put_u16(1001)
+						buffer.put_string("COUCOU")
 						peerstream.put_packet(buffer.get_data_array())
 
 				if Input.is_action_just_released("ui_right"):
