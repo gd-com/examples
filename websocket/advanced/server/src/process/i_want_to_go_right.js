@@ -14,7 +14,7 @@ module.exports = {
     let packetId = putU16(packets.OK_GO_RIGHT)
     let packetData = putString('thanks !')
 
-    let packet = Buffer.concat(packetId, packetData)
+    let packet = Buffer.concat([packetId, packetData])
 
     ws.send(packet)
   }

@@ -16,7 +16,7 @@ let server = net.createServer((socket) => {
   const uuidPacketData = putString(uuid)
 
   const lengthBuffer = Buffer.alloc(4)
-  lengthBuffer.writeUInt32LE(packetToSend.length + uuidPacketData.length, 0)
+  lengthBuffer.writeUInt32LE(uuidPacketID.length + uuidPacketData.length, 0)
   const toSend = Buffer.concat([lengthBuffer, uuidPacketID, uuidPacketData])
 
   socket.write(toSend)

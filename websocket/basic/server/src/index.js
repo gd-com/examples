@@ -10,7 +10,7 @@ wss.on('connection', ws => {
     let recieve = gdCom.getVar(recieveBuff)
     console.log(recieve.value)
 
-    let buffer = putVar(Math.random())
+    let buffer = gdCom.putVar(Math.random())
     ws.send(buffer)
   })
 })

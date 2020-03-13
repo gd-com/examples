@@ -8,11 +8,11 @@ const wss = new WebSocket.Server({ port: 8080 })
 wss.on('connection', ws => {
   let uuid = v4()
   console.log(`[${uuid}] Connected`)
-  
+
   // send is uuid
   let uuidPacketId = putU16(1)
   let uuidPacketData = putString(uuid)
-  let uuidPacket = Buffer.concat(uuidPacketId, uuidPacketData)
+  let uuidPacket = Buffer.concat([uuidPacketId, uuidPacketData])
   ws.send(uuidPacket)
 
   ws.on('message', (message) => {
@@ -21,7 +21,7 @@ wss.on('connection', ws => {
     const type = getU16(recieve)
     console.log(`[${uuid}] << Recieve packet code`, type.value)
     if (process.hasOwnProperty(type.value)) {
-      process[`${type.value}`](uuid, ws, recieve.getBuffer())
+      process[`${type.value}`](uuid, ws, recieve)
     } else {
       console.log(`[${uuid}] << Unknow packet code`, type.value)
     }
