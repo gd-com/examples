@@ -1,4 +1,4 @@
-const { GdBuffer, addLengthFront } = require('@gd-com/utils')
+const { putU16 } = require('@gd-com/utils')
 const packets = require("../packets")
 
 module.exports = {
@@ -7,9 +7,13 @@ module.exports = {
 
     console.log(`[${uuid}] >> Send packet code`, packets.OK_GO_LEFT)
 
-    let packet = new GdBuffer()
-    packet.putU16(packets.OK_GO_LEFT)
+    let packet = putU16(packets.OK_GO_LEFT)
 
-    socket.write(addLengthFront(packet.getBuffer()))
+    const lengthBuffer = Buffer.alloc(4)
+    lengthBuffer.writeUInt32LE(packet.length, 0)
+    
+    const toSend = Buffer.concat([lengthBuffer, packet])
+
+    socket.write(toSend)
   }
 }

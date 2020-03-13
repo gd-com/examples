@@ -1,5 +1,5 @@
 const WebSocket = require('ws')
-const { GdBuffer } = require('@gd-com/utils')
+const { getU16, putU16, putString } = require('@gd-com/utils')
 const { v4 } = require('uuid')
 const process = require('./process')
 
@@ -10,20 +10,20 @@ wss.on('connection', ws => {
   console.log(`[${uuid}] Connected`)
   
   // send is uuid
-  let uuidPacket = new GdBuffer()
-  uuidPacket.putU16(1)
-  uuidPacket.putString(uuid)
-   ws.send(uuidPacket.getBuffer())
+  let uuidPacketId = putU16(1)
+  let uuidPacketData = putString(uuid)
+  let uuidPacket = Buffer.concat(uuidPacketId, uuidPacketData)
+  ws.send(uuidPacket)
 
   ws.on('message', (message) => {
-    let recieve = new GdBuffer(Buffer.from(message))
+    let recieve = Buffer.from(message)
 
-    const type = recieve.getU16()
-    console.log(`[${uuid}] << Recieve packet code`, type)
-    if (process.hasOwnProperty(type)) {
-      process[`${type}`](uuid, ws, recieve.getBuffer())
+    const type = getU16(recieve)
+    console.log(`[${uuid}] << Recieve packet code`, type.value)
+    if (process.hasOwnProperty(type.value)) {
+      process[`${type.value}`](uuid, ws, recieve.getBuffer())
     } else {
-      console.log(`[${uuid}] << Unknow packet code`, type)
+      console.log(`[${uuid}] << Unknow packet code`, type.value)
     }
   })
 })

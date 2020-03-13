@@ -1,5 +1,5 @@
 const dgram = require('dgram')
-const { GdBuffer } = require('@gd-com/utils')
+const { putU16 } = require('@gd-com/utils')
 const { v4 } = require('uuid')
 const process = require('./process')
 
@@ -22,14 +22,14 @@ server.on('message', (buf, remote) => {
     client = clients[`${remote.address}-${remote.port}`]
   }
 
-  let recieve = new GdBuffer(Buffer.from(buf))
-  const type = recieve.getU16()
+  let recieve = new Buffer.from(buf)
+  const type = getU16(recieve)
 
-  console.log(`[${client.uuid}] << Recieve packet code`, type)
-  if (process.hasOwnProperty(type)) {
-    process[`${type}`](client, server, remote, recieve.getBuffer())
+  console.log(`[${client.uuid}] << Recieve packet code`, type.value)
+  if (process.hasOwnProperty(type.value)) {
+    process[`${type.value}`](client, server, remote, recieve.getBuffer())
   } else {
-    console.log(`[${client.uuid}] << Unknow packet code`, type)
+    console.log(`[${client.uuid}] << Unknow packet code`, type.value)
   }
 })
 

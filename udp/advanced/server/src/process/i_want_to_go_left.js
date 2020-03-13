@@ -1,4 +1,4 @@
-const { GdBuffer } = require('@gd-com/utils')
+const { putU16 } = require('@gd-com/utils')
 const packets = require("../packets")
 
 module.exports = {
@@ -7,9 +7,8 @@ module.exports = {
 
     console.log(`[${client.uuid}] >> Send packet code`, packets.OK_GO_LEFT)
 
-    let packet = new GdBuffer()
-    packet.putU16(packets.OK_GO_LEFT)
+    let packet = putU16(packets.OK_GO_LEFT)
 
-    server.send(packet.getBuffer(), remote.port, remote.address)
+    server.send(packet, remote.port, remote.address)
   }
 }

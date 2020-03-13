@@ -1,7 +1,10 @@
 const net = require('net')
-const { StreamTcp, GdBuffer, addLengthFront } = require('@gd-com/utils')
+const { putU16, putString } = require('@gd-com/utils')
 const { v4 } = require('uuid')
 const process = require('./process')
+const StreamTcp = require('./StreamTcp')
+
+const tcpSplit = new StreamTcp()
 
 let server = net.createServer((socket) => {
   let uuid = v4()
@@ -9,21 +12,24 @@ let server = net.createServer((socket) => {
   console.log(`[${uuid}] Connected`);
 
   // send is uuid
-  let uuidPacket = new GdBuffer()
-  uuidPacket.putU16(1)
-  uuidPacket.putString(uuid)
-  socket.write(addLengthFront(uuidPacket.getBuffer()))
+  const uuidPacketID = putU16(1)
+  const uuidPacketData = putString(uuid)
 
-  const tcpSplit = new StreamTcp()
+  const lengthBuffer = Buffer.alloc(4)
+  lengthBuffer.writeUInt32LE(packetToSend.length + uuidPacketData.length, 0)
+  const toSend = Buffer.concat([lengthBuffer, uuidPacketID, uuidPacketData])
+
+  socket.write(toSend)
+
   socket.pipe(tcpSplit).on('data', (data) => {
-    let recieve = new GdBuffer(Buffer.from(data))
+    let recieve = new Buffer.from(data)
 
-    const type = recieve.getU16()
-    console.log(`[${uuid}] << Recieve packet code`, type)
-    if (process.hasOwnProperty(type)) {
-      process[`${type}`](uuid, socket, recieve.getBuffer())
+    const type = getU16(recieve)
+    console.log(`[${uuid}] << Recieve packet code`, type.value)
+    if (process.hasOwnProperty(type.value)) {
+      process[`${type.value}`](uuid, socket, recieve.getBuffer())
     } else {
-      console.log(`[${uuid}] << Unknow packet code`, type)
+      console.log(`[${uuid}] << Unknow packet code`, type.value)
     }
 
   })

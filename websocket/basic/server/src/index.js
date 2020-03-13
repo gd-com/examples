@@ -6,11 +6,11 @@ const wss = new WebSocket.Server({ port: 8080 })
 wss.on('connection', ws => {
   console.log('connected')
   ws.on('message', (message) => {
-    let recieve = new gdCom.GdBuffer(Buffer.from(message))
-    console.log(recieve.getVar())
+    let recieveBuff = Buffer.from(message)
+    let recieve = gdCom.getVar(recieveBuff)
+    console.log(recieve.value)
 
-    let buffer = new gdCom.GdBuffer()
-    buffer.putVar(Math.random())
-    ws.send(buffer.getBuffer())
+    let buffer = putVar(Math.random())
+    ws.send(buffer)
   })
 })
