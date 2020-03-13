@@ -27,7 +27,7 @@ server.on('message', (buf, remote) => {
 
   console.log(`[${client.uuid}] << Recieve packet code`, type.value)
   if (process.hasOwnProperty(type.value)) {
-    process[`${type.value}`](client, server, remote, recieve)
+    process[`${type.value}`](client, server, remote, recieve.slice(type.length))
   } else {
     console.log(`[${client.uuid}] << Unknow packet code`, type.value)
   }

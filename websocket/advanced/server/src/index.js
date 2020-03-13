@@ -21,7 +21,7 @@ wss.on('connection', ws => {
     const type = getU16(recieve)
     console.log(`[${uuid}] << Recieve packet code`, type.value)
     if (process.hasOwnProperty(type.value)) {
-      process[`${type.value}`](uuid, ws, recieve)
+      process[`${type.value}`](uuid, ws, recieve.slice(type.length))
     } else {
       console.log(`[${uuid}] << Unknow packet code`, type.value)
     }
